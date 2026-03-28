@@ -4,7 +4,8 @@
 
 - verify crate metadata in `crates/ta-lib-core/Cargo.toml`
 - run `cargo package -p ta-lib-codegen`
-- run `cargo package -p ta-lib`
+- publish `ta-lib-codegen` first, or use a release environment where it is resolvable
+- only then run `cargo package -p ta-lib`
 
 ## Verification
 

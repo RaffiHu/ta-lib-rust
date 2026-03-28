@@ -31,6 +31,3 @@ jobs:
 
       - name: Package ta-lib-codegen
         run: cargo package -p ta-lib-codegen
-
-      - name: Package ta-lib
-        run: cargo package -p ta-lib --no-verify
