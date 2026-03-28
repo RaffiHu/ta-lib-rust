@@ -1,0 +1,10 @@
+{
+    "asset_file_name": "ta-lib-0.6.4-src.tar.gz",
+    "sources_digest": "88d3c1dc9a2155583937711acc44db2e",
+    "builder_id": "github-actions[bot]",
+    "built_success": "True",
+    "package_md5": "d0b399968d2078fdf0299ffcb1fdeb8c",
+    "gen_code_pass": "Disabled",
+    "ta_regtest_pass": "True",
+    "dist_test_pass": "True"
+}

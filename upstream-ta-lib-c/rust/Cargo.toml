@@ -1,0 +1,35 @@
+[package]
+name = "ta-lib"
+version = "0.6.4"
+edition = "2021"
+authors = ["Mario Fortier", "Chad Furman"]
+description = "Technical Analysis Library - Rust implementation"
+documentation = "https://ta-lib.org/docs/"
+homepage = "https://ta-lib.org/"
+repository = "https://github.com/TA-Lib/ta-lib"
+license = "BSD-3-Clause"
+keywords = ["technical-analysis", "trading", "finance", "indicators", "ta"]
+categories = ["algorithms", "mathematics", "finance"]
+readme = "../README.md"
+
+[lib]
+name = "ta_lib"
+path = "src/lib.rs"
+
+[dependencies]
+# No external dependencies for core TA-Lib functionality
+# This keeps the library lightweight and self-contained
+
+[dev-dependencies]
+# For testing the generated functions
+criterion = "0.5"
+
+[features]
+default = []
+# Feature flag for single precision variants
+single-precision = []
+# Feature flags for function groups can be added in the future as needed
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

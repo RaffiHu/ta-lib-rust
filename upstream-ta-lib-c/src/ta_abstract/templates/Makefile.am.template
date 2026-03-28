@@ -1,0 +1,11 @@
+
+noinst_LTLIBRARIES = libta_func.la
+AM_CPPFLAGS = -I../ta_common/
+
+libta_func_la_SOURCES = ta_utility.c \
+%%%GENCODE%%%
+
+libta_funcdir=$(includedir)/ta-lib/
+libta_func_HEADERS = ../../include/ta_defs.h \
+	../../include/ta_libc.h \
+	../../include/ta_func.h

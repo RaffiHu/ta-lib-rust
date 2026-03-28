@@ -1,0 +1,24 @@
+[package]
+name = "ta-lib"
+version = "0.1.0"
+description = "Rust port of the TA-Lib core technical analysis library"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+documentation = "https://docs.rs/ta-lib"
+keywords = ["technical-analysis", "trading", "finance", "indicators", "ta"]
+categories = ["algorithms", "mathematics", "finance"]
+build = "build.rs"
+
+[lib]
+path = "src/lib.rs"
+name = "ta_lib"
+
+[lints]
+workspace = true
+
+[dependencies]
+
+[build-dependencies]
+ta-lib-codegen = { version = "0.1.0", path = "../ta-lib-codegen" }

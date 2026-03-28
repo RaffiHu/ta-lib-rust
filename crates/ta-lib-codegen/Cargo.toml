@@ -1,0 +1,21 @@
+[package]
+name = "ta-lib-codegen"
+version = "0.1.0"
+description = "Build-time metadata and code generator for the ta-lib Rust port"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+documentation = "https://docs.rs/ta-lib-codegen"
+keywords = ["technical-analysis", "codegen", "trading", "finance", "ta"]
+categories = ["development-tools::build-utils", "algorithms", "finance"]
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "ta-lib-codegen"
+path = "src/main.rs"
+
+[lints]
+workspace = true

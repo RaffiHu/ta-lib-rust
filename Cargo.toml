@@ -1,0 +1,19 @@
+[workspace]
+members = [
+    "crates/ta-lib-codegen",
+    "crates/ta-lib-core",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "BSD-3-Clause"
+rust-version = "1.85"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"

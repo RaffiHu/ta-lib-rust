@@ -1,0 +1,9 @@
+/target/
+/Cargo.lock
+/build/
+/dist/
+/.idea/
+/.vscode/
+.DS_Store
+*.swp
+*.swo
