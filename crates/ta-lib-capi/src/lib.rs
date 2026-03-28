@@ -267,10 +267,7 @@ fn retcode_info(ret_code: RetCode) -> (*const c_char, *const c_char) {
             c_str(RC_GROUP_NOT_FOUND_INFO),
         ),
         RetCode::FuncNotFound => (c_str(RC_FUNC_NOT_FOUND_ENUM), c_str(RC_FUNC_NOT_FOUND_INFO)),
-        RetCode::InvalidHandle => (
-            c_str(RC_INVALID_HANDLE_ENUM),
-            c_str(RC_INVALID_HANDLE_INFO),
-        ),
+        RetCode::InvalidHandle => (c_str(RC_INVALID_HANDLE_ENUM), c_str(RC_INVALID_HANDLE_INFO)),
         RetCode::InvalidParamHolder => (
             c_str(RC_INVALID_PARAM_HOLDER_ENUM),
             c_str(RC_INVALID_PARAM_HOLDER_INFO),
@@ -304,14 +301,8 @@ fn retcode_info(ret_code: RetCode) -> (*const c_char, *const c_char) {
             c_str(RC_INVALID_LIST_TYPE_INFO),
         ),
         RetCode::BadObject => (c_str(RC_BAD_OBJECT_ENUM), c_str(RC_BAD_OBJECT_INFO)),
-        RetCode::NotSupported => (
-            c_str(RC_NOT_SUPPORTED_ENUM),
-            c_str(RC_NOT_SUPPORTED_INFO),
-        ),
-        RetCode::InternalError => (
-            c_str(RC_INTERNAL_ERROR_ENUM),
-            c_str(RC_INTERNAL_ERROR_INFO),
-        ),
+        RetCode::NotSupported => (c_str(RC_NOT_SUPPORTED_ENUM), c_str(RC_NOT_SUPPORTED_INFO)),
+        RetCode::InternalError => (c_str(RC_INTERNAL_ERROR_ENUM), c_str(RC_INTERNAL_ERROR_INFO)),
         RetCode::UnknownErr => (c_str(RC_UNKNOWN_ERR_ENUM), c_str(RC_UNKNOWN_ERR_INFO)),
     }
 }
@@ -546,7 +537,14 @@ pub unsafe extern "C" fn TA_GroupTableAlloc(table: *mut *mut TA_StringTable) -> 
         return RetCode::BadParam as i32;
     }
     // SAFETY: caller provides a valid output pointer.
-    unsafe { *table = alloc_string_table(ABSTRACT_GROUP_NAMES.iter().map(|name| name.as_ptr().cast()).collect()) };
+    unsafe {
+        *table = alloc_string_table(
+            ABSTRACT_GROUP_NAMES
+                .iter()
+                .map(|name| name.as_ptr().cast())
+                .collect(),
+        )
+    };
     RetCode::Success as i32
 }
 
@@ -589,10 +587,7 @@ pub unsafe extern "C" fn TA_FuncTableFree(table: *mut TA_StringTable) -> i32 {
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn TA_GetFuncHandle(
-    name: *const c_char,
-    handle: *mut *const u32,
-) -> i32 {
+pub unsafe extern "C" fn TA_GetFuncHandle(name: *const c_char, handle: *mut *const u32) -> i32 {
     if handle.is_null() {
         return RetCode::BadParam as i32;
     }
@@ -935,10 +930,7 @@ pub unsafe extern "C" fn TA_SetOutputParamRealPtr(
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn TA_GetLookback(
-    params: *const TA_ParamHolder,
-    lookback: *mut i32,
-) -> i32 {
+pub unsafe extern "C" fn TA_GetLookback(params: *const TA_ParamHolder, lookback: *mut i32) -> i32 {
     let Ok(holder) = (unsafe { holder_data(params) }) else {
         return RetCode::InvalidParamHolder as i32;
     };
@@ -961,7 +953,10 @@ pub unsafe extern "C" fn TA_CallFunc(
 
 #[unsafe(no_mangle)]
 pub extern "C" fn TA_FunctionDescriptionXML() -> *const c_char {
-    static XML: &str = concat!(include_str!("../../../upstream-ta-lib-c/ta_func_api.xml"), "\0");
+    static XML: &str = concat!(
+        include_str!("../../../upstream-ta-lib-c/ta_func_api.xml"),
+        "\0"
+    );
     XML.as_ptr().cast()
 }
 

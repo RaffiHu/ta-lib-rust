@@ -193,7 +193,9 @@ pub fn render_generated_abstract_api(functions: &[FunctionDef]) -> String {
     output.push_str("    }\n");
     output.push_str("}\n\n");
 
-    output.push_str("fn abstract_function_index_from_handle(handle: *const u32) -> Option<usize> {\n");
+    output.push_str(
+        "fn abstract_function_index_from_handle(handle: *const u32) -> Option<usize> {\n",
+    );
     output.push_str("    if handle.is_null() {\n");
     output.push_str("        return None;\n");
     output.push_str("    }\n");
@@ -1620,7 +1622,9 @@ fn render_c_api_function_wrapper(function: &FunctionDef) -> String {
         ));
     }
     output.push_str(") -> i32 {\n");
-    output.push_str("    let (start_idx, end_idx) = match crate::normalize_range(start_idx, end_idx) {\n");
+    output.push_str(
+        "    let (start_idx, end_idx) = match crate::normalize_range(start_idx, end_idx) {\n",
+    );
     output.push_str("        Ok(range) => range,\n");
     output.push_str("        Err(ret_code) => return ret_code as i32,\n");
     output.push_str("    };\n");
@@ -1774,7 +1778,9 @@ fn render_abstract_function_info(index: usize, function: &FunctionDef) -> String
 fn render_abstract_param_tables(index: usize, function: &FunctionDef) -> String {
     let mut output = String::new();
     let inputs = collapse_required_inputs(function);
-    output.push_str(&format!("static ABSTRACT_HANDLE_{index}: u32 = {index}u32;\n"));
+    output.push_str(&format!(
+        "static ABSTRACT_HANDLE_{index}: u32 = {index}u32;\n"
+    ));
 
     for (param_index, input) in inputs.iter().enumerate() {
         output.push_str(&format!(
@@ -1978,19 +1984,16 @@ fn render_abstract_call_arm(index: usize, function: &FunctionDef) -> String {
 }
 
 fn abstract_function_flags(function: &FunctionDef) -> i32 {
-    function
-        .flags
-        .iter()
-        .fold(0, |flags, flag| {
-            flags
-                | match flag.as_str() {
-                    "Overlap" => 0x01000000,
-                    "Volume" => 0x04000000,
-                    "Unstable Period" => 0x08000000,
-                    "Candlestick" => 0x10000000,
-                    _ => 0,
-                }
-        })
+    function.flags.iter().fold(0, |flags, flag| {
+        flags
+            | match flag.as_str() {
+                "Overlap" => 0x01000000,
+                "Volume" => 0x04000000,
+                "Unstable Period" => 0x08000000,
+                "Candlestick" => 0x10000000,
+                _ => 0,
+            }
+    })
 }
 
 fn abstract_opt_input_kind(opt: &ArgumentDef) -> &'static str {

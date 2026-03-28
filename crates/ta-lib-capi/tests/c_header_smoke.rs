@@ -44,7 +44,10 @@ fn c_can_include_upstream_headers_and_link_to_rust_staticlib() {
             .arg("--lib")
             .status()
             .expect("build ta-lib-capi staticlib");
-        assert!(status.success(), "cargo build for staticlib failed with {status}");
+        assert!(
+            status.success(),
+            "cargo build for staticlib failed with {status}"
+        );
         find_file(&target_dir.join("debug"), "libta_lib_capi.a").expect("find staticlib")
     };
     assert!(
