@@ -1,5 +1,7 @@
 //! Generated-surface scaffolding and build-time emitted wrapper metadata.
 
+use alloc::vec::Vec;
+
 /// Function group names from TA-Lib metadata.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FunctionGroup {

@@ -20,6 +20,10 @@ name = "ta_lib"
 [lints]
 workspace = true
 
+[features]
+default = ["std"]
+std = []
+
 [dependencies]
 
 [build-dependencies]

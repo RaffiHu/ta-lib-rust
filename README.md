@@ -19,11 +19,20 @@ Upstream baseline:
 - all 161 upstream TA-Lib functions are implemented
 - `Context` is the primary Rust API
 - `Core` is the low-level global compatibility facade
+- the upstream `ta_regtest` regression harness builds and passes against the Rust-backed C ABI shim
 - the workspace includes generated full-surface C-oracle parity tests for:
   - default cases
   - lookback-boundary cases
   - seeded deterministic cases
   - parameter-variant cases
+
+This project has strong empirical parity with upstream TA-Lib for the checked upstream baseline. That claim is based on:
+
+- the upstream `ta_regtest` harness passing against this port
+- generated full-surface C-oracle differential coverage
+- targeted parity tests for stateful behavior such as unstable periods, compatibility mode, and candle settings
+
+This is not a formal proof of equality for every possible input. It is a strong regression-tested compatibility claim backed by the upstream harness and the Rust test matrix.
 
 Parity details are documented in [docs/PARITY.md](./docs/PARITY.md).
 

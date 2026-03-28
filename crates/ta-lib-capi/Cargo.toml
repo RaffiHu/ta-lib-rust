@@ -1,0 +1,26 @@
+[package]
+name = "ta-lib-capi"
+version = "0.1.0"
+description = "Test-only C ABI compatibility shim for the ta-lib Rust port"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+publish = false
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["rlib", "staticlib"]
+
+[lints.rust]
+unsafe_code = "allow"
+
+[dependencies]
+ta-lib = { path = "../ta-lib-core", features = ["std"] }
+
+[build-dependencies]
+ta-lib-codegen = { version = "0.1.0", path = "../ta-lib-codegen" }
+
+[dev-dependencies]
+tempfile = "3"

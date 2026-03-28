@@ -1,3 +1,5 @@
+use alloc::vec::Vec;
+
 use crate::helpers::{
     INTEGER_DEFAULT, REAL_DEFAULT, is_zero, normalize_period, validate_input_len,
     validate_output_len, validate_range,
@@ -51,8 +53,8 @@ pub(crate) fn ma_lookback_dispatch(
         MAType::Tema => Ok(tema_lookback(context, period)),
         MAType::Trima => Ok(trima_lookback(period)),
         MAType::Kama => Ok(kama_lookback(context, period)),
+        MAType::Mama => Ok(mama_lookback(context, REAL_DEFAULT, REAL_DEFAULT)),
         MAType::T3 => Ok(t3_lookback(context, period, REAL_DEFAULT)),
-        _ => Err(RetCode::NotSupported),
     }
 }
 
@@ -170,6 +172,21 @@ pub(crate) fn ma_run_dispatch(
             out_nb_element,
             out_real,
         ),
+        MAType::Mama => {
+            let mut out_fama = vec![0.0; needed];
+            mama_run(
+                context,
+                start_idx,
+                end_idx,
+                in_real,
+                REAL_DEFAULT,
+                REAL_DEFAULT,
+                out_beg_idx,
+                out_nb_element,
+                out_real,
+                &mut out_fama,
+            )
+        }
         MAType::T3 => t3_run(
             context,
             start_idx,
@@ -181,7 +198,6 @@ pub(crate) fn ma_run_dispatch(
             out_nb_element,
             out_real,
         ),
-        _ => RetCode::NotSupported,
     }
 }
 
@@ -1741,13 +1757,12 @@ pub(crate) fn dema_run(
         return ret_code;
     }
 
-    let first_start = adjusted_start - lookback_total;
-    let mut first_buf = vec![0.0; end_idx - first_start + 1];
+    let mut first_buf = vec![0.0; end_idx + 1];
     let mut first_beg = 0usize;
     let mut first_nb = 0usize;
     let ret_code = ema::run(
         context,
-        first_start,
+        0,
         end_idx,
         in_real,
         period as i32,
@@ -1758,16 +1773,16 @@ pub(crate) fn dema_run(
     if ret_code != RetCode::Success {
         return ret_code;
     }
-    if first_beg != adjusted_start - ema_lookback {
-        return RetCode::InternalError;
+    if first_nb == 0 {
+        return RetCode::Success;
     }
 
-    let mut second_buf = vec![0.0; first_nb.saturating_sub(ema_lookback)];
+    let mut second_buf = vec![0.0; first_nb];
     let mut second_beg = 0usize;
     let mut second_nb = 0usize;
     let ret_code = ema::run(
         context,
-        ema_lookback,
+        0,
         first_nb - 1,
         &first_buf[..first_nb],
         period as i32,
@@ -1778,12 +1793,18 @@ pub(crate) fn dema_run(
     if ret_code != RetCode::Success {
         return ret_code;
     }
-    if second_beg != ema_lookback || second_nb != needed {
+    let second_original_beg = first_beg + second_beg;
+    if second_original_beg > adjusted_start {
+        return RetCode::InternalError;
+    }
+    let first_offset = adjusted_start.saturating_sub(first_beg);
+    let second_offset = adjusted_start - second_original_beg;
+    if first_offset + needed > first_nb || second_offset + needed > second_nb {
         return RetCode::InternalError;
     }
 
     for idx in 0..needed {
-        out_real[idx] = (2.0 * first_buf[ema_lookback + idx]) - second_buf[idx];
+        out_real[idx] = (2.0 * first_buf[first_offset + idx]) - second_buf[second_offset + idx];
     }
 
     *out_beg_idx = adjusted_start;
@@ -1834,13 +1855,12 @@ pub(crate) fn tema_run(
         return ret_code;
     }
 
-    let first_start = adjusted_start - lookback_total;
-    let mut first_buf = vec![0.0; end_idx - first_start + 1];
+    let mut first_buf = vec![0.0; end_idx + 1];
     let mut first_beg = 0usize;
     let mut first_nb = 0usize;
     let ret_code = ema::run(
         context,
-        first_start,
+        0,
         end_idx,
         in_real,
         period as i32,
@@ -1851,16 +1871,16 @@ pub(crate) fn tema_run(
     if ret_code != RetCode::Success {
         return ret_code;
     }
-    if first_beg != adjusted_start - (ema_lookback * 2) {
-        return RetCode::InternalError;
+    if first_nb == 0 {
+        return RetCode::Success;
     }
 
-    let mut second_buf = vec![0.0; first_nb.saturating_sub(ema_lookback)];
+    let mut second_buf = vec![0.0; first_nb];
     let mut second_beg = 0usize;
     let mut second_nb = 0usize;
     let ret_code = ema::run(
         context,
-        ema_lookback,
+        0,
         first_nb - 1,
         &first_buf[..first_nb],
         period as i32,
@@ -1871,16 +1891,16 @@ pub(crate) fn tema_run(
     if ret_code != RetCode::Success {
         return ret_code;
     }
-    if second_beg != ema_lookback {
+    if second_nb == 0 {
         return RetCode::InternalError;
     }
 
-    let mut third_buf = vec![0.0; second_nb.saturating_sub(ema_lookback)];
+    let mut third_buf = vec![0.0; second_nb];
     let mut third_beg = 0usize;
     let mut third_nb = 0usize;
     let ret_code = ema::run(
         context,
-        ema_lookback,
+        0,
         second_nb - 1,
         &second_buf[..second_nb],
         period as i32,
@@ -1891,14 +1911,25 @@ pub(crate) fn tema_run(
     if ret_code != RetCode::Success {
         return ret_code;
     }
-    if third_beg != ema_lookback || third_nb != needed {
+    let second_original_beg = first_beg + second_beg;
+    let third_original_beg = second_original_beg + third_beg;
+    if third_original_beg > adjusted_start {
+        return RetCode::InternalError;
+    }
+    let first_offset = adjusted_start.saturating_sub(first_beg);
+    let second_offset = adjusted_start.saturating_sub(second_original_beg);
+    let third_offset = adjusted_start - third_original_beg;
+    if first_offset + needed > first_nb
+        || second_offset + needed > second_nb
+        || third_offset + needed > third_nb
+    {
         return RetCode::InternalError;
     }
 
     for idx in 0..needed {
-        out_real[idx] = (3.0 * first_buf[(ema_lookback * 2) + idx])
-            - (3.0 * second_buf[ema_lookback + idx])
-            + third_buf[idx];
+        out_real[idx] = (3.0 * first_buf[first_offset + idx])
+            - (3.0 * second_buf[second_offset + idx])
+            + third_buf[third_offset + idx];
     }
 
     *out_beg_idx = adjusted_start;

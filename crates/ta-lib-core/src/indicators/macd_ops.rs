@@ -1,3 +1,5 @@
+use alloc::vec;
+
 use crate::helpers::{
     INTEGER_DEFAULT, normalize_period, validate_input_len, validate_output_len, validate_range,
 };
@@ -231,7 +233,7 @@ fn price_oscillator_run(
         return RetCode::BadParam;
     };
     if slow < fast {
-        std::mem::swap(&mut fast, &mut slow);
+        core::mem::swap(&mut fast, &mut slow);
     }
 
     let fast_lookback = match ma_lookback(context, fast as i32, ma_type) {
@@ -326,7 +328,7 @@ pub(crate) fn macd_lookback(
         return -1;
     };
     if slow < fast {
-        std::mem::swap(&mut fast, &mut slow);
+        core::mem::swap(&mut fast, &mut slow);
     }
     ema::lookback(context, slow as i32) + ema::lookback(context, signal as i32)
 }
@@ -355,7 +357,7 @@ pub(crate) fn macd_run(
         return RetCode::BadParam;
     };
     if slow < fast {
-        std::mem::swap(&mut fast, &mut slow);
+        core::mem::swap(&mut fast, &mut slow);
     }
     macd_internal(
         context,
@@ -443,7 +445,7 @@ pub(crate) fn macdext_lookback(
         return -1;
     };
     if slow < fast {
-        std::mem::swap(&mut fast, &mut slow);
+        core::mem::swap(&mut fast, &mut slow);
     }
 
     let fast_lb = overlap_ops::ma_lookback_dispatch(context, fast as i32, fast_ma_type as i32);
@@ -508,8 +510,8 @@ pub(crate) fn macdext_run(
         Err(ret_code) => return ret_code,
     };
     if slow < fast {
-        std::mem::swap(&mut fast, &mut slow);
-        std::mem::swap(&mut fast_ma_type, &mut slow_ma_type);
+        core::mem::swap(&mut fast, &mut slow);
+        core::mem::swap(&mut fast_ma_type, &mut slow_ma_type);
     }
 
     let fast_lb = match overlap_ops::ma_lookback_dispatch(context, fast as i32, fast_ma_type as i32)

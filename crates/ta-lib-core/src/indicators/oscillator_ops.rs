@@ -24,6 +24,9 @@ fn normalize_ma_type(value: i32) -> Result<MAType, RetCode> {
 }
 
 fn ma_lookback(context: &Context, period: i32, ma_type: MAType) -> Result<i32, RetCode> {
+    if period <= 1 {
+        return Ok(0);
+    }
     match ma_type {
         MAType::Sma => Ok(sma::lookback(period)),
         MAType::Ema => Ok(ema::lookback(context, period)),
@@ -42,6 +45,16 @@ fn ma_run(
     out_nb_element: &mut usize,
     out_real: &mut [f64],
 ) -> RetCode {
+    if period <= 1 {
+        let needed = end_idx - start_idx + 1;
+        if let Err(ret_code) = validate_output_len(out_real, needed) {
+            return ret_code;
+        }
+        out_real[..needed].copy_from_slice(&in_real[start_idx..=end_idx]);
+        *out_beg_idx = start_idx;
+        *out_nb_element = needed;
+        return RetCode::Success;
+    }
     match ma_type {
         MAType::Sma => sma::run(
             start_idx,

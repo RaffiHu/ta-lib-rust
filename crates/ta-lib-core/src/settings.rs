@@ -90,6 +90,39 @@ impl FuncUnstId {
 
         Some(value as usize)
     }
+
+    #[must_use]
+    pub fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::Adx),
+            1 => Some(Self::Adxr),
+            2 => Some(Self::Atr),
+            3 => Some(Self::Cmo),
+            4 => Some(Self::Dx),
+            5 => Some(Self::Ema),
+            6 => Some(Self::HtDcPeriod),
+            7 => Some(Self::HtDcPhase),
+            8 => Some(Self::HtPhasor),
+            9 => Some(Self::HtSine),
+            10 => Some(Self::HtTrendline),
+            11 => Some(Self::HtTrendMode),
+            12 => Some(Self::Imi),
+            13 => Some(Self::Kama),
+            14 => Some(Self::Mama),
+            15 => Some(Self::Mfi),
+            16 => Some(Self::MinusDI),
+            17 => Some(Self::MinusDM),
+            18 => Some(Self::Natr),
+            19 => Some(Self::PlusDI),
+            20 => Some(Self::PlusDM),
+            21 => Some(Self::Rsi),
+            22 => Some(Self::StochRsi),
+            23 => Some(Self::T3),
+            24 => Some(Self::FuncUnstAll),
+            -1 => Some(Self::FuncUnstNone),
+            _ => None,
+        }
+    }
 }
 
 /// Candle range type mirrored from upstream TA-Lib.
@@ -129,6 +162,66 @@ impl CandleSettingType {
         }
 
         Some(value as usize)
+    }
+
+    #[must_use]
+    pub fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::BodyLong),
+            1 => Some(Self::BodyVeryLong),
+            2 => Some(Self::BodyShort),
+            3 => Some(Self::BodyDoji),
+            4 => Some(Self::ShadowLong),
+            5 => Some(Self::ShadowVeryLong),
+            6 => Some(Self::ShadowShort),
+            7 => Some(Self::ShadowVeryShort),
+            8 => Some(Self::Near),
+            9 => Some(Self::Far),
+            10 => Some(Self::Equal),
+            11 => Some(Self::AllCandleSettings),
+            _ => None,
+        }
+    }
+}
+
+impl Compatibility {
+    #[must_use]
+    pub fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::Default),
+            1 => Some(Self::Metastock),
+            _ => None,
+        }
+    }
+}
+
+impl MAType {
+    #[must_use]
+    pub fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::Sma),
+            1 => Some(Self::Ema),
+            2 => Some(Self::Wma),
+            3 => Some(Self::Dema),
+            4 => Some(Self::Tema),
+            5 => Some(Self::Trima),
+            6 => Some(Self::Kama),
+            7 => Some(Self::Mama),
+            8 => Some(Self::T3),
+            _ => None,
+        }
+    }
+}
+
+impl RangeType {
+    #[must_use]
+    pub fn from_i32(value: i32) -> Option<Self> {
+        match value {
+            0 => Some(Self::RealBody),
+            1 => Some(Self::HighLow),
+            2 => Some(Self::Shadows),
+            _ => None,
+        }
     }
 }
 

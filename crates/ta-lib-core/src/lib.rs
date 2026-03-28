@@ -2,6 +2,9 @@
 
 //! Core Rust implementation for the TA-Lib rewrite.
 
+extern crate alloc;
+
+#[cfg(feature = "std")]
 mod compat;
 mod context;
 mod helpers;
@@ -10,6 +13,7 @@ mod settings;
 
 pub mod generated;
 
+#[cfg(feature = "std")]
 pub use compat::{Core, initialize, shutdown};
 pub use context::Context;
 pub use generated::{FUNCTIONS, FunctionGroup, FunctionInfo};

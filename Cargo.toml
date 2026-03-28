@@ -2,6 +2,7 @@
 members = [
     "crates/ta-lib-codegen",
     "crates/ta-lib-core",
+    "crates/ta-lib-capi",
 ]
 resolver = "2"
 
