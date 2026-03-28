@@ -9,6 +9,8 @@ resolver = "2"
 edition = "2024"
 license = "BSD-3-Clause"
 rust-version = "1.85"
+repository = "https://github.com/RaffiHu/ta-lib-rust"
+homepage = "https://github.com/RaffiHu/ta-lib-rust"
 
 [workspace.lints.rust]
 unsafe_code = "deny"
