@@ -16,6 +16,7 @@ ltmain.sh
 libtool
 install-sh
 include/ta_config.*
+!include/ta_config.h.cmake
 include/stamp-h1
 depcomp
 configure
